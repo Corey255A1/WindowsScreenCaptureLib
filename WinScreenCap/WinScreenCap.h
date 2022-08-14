@@ -61,7 +61,7 @@ namespace WinScreenCap {
         BITMAPINFOHEADER _bitmap_info;
         BITMAP _bitmap;
         HBITMAP _screen_bitmap_handle;
-        CURSORINFO _cursor_info;
+       
     };
 
 }

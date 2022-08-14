@@ -45,8 +45,7 @@ namespace WinScreenCap {
         _height(height),
         _right(left + width),
         _bottom(top + height),
-        _jpeg_image_size(0),
-        _cursor_info({sizeof(_cursor_info)})
+        _jpeg_image_size(0)
     {
         // Retrieve the handle to a display device context for the client 
       // area of the window. 
@@ -115,16 +114,17 @@ namespace WinScreenCap {
             return;
         }
 
-        //Capture the cursor and draw it over the image        
-        GetCursorInfo(&_cursor_info);
+        //Capture the cursor and draw it over the image
+        CURSORINFO cursor_info = { sizeof(cursor_info) };
+        GetCursorInfo(&cursor_info);
         //Check if the cursor point is with in our screen
-        if (_cursor_info.flags == CURSOR_SHOWING &&
-            PointOnScreen(_cursor_info.ptScreenPos.x, _cursor_info.ptScreenPos.y)) {
+        if (cursor_info.flags == CURSOR_SHOWING &&
+            PointOnScreen(cursor_info.ptScreenPos.x, cursor_info.ptScreenPos.y)) {
             ICONINFO info = { sizeof(info) };
-                GetIconInfo(_cursor_info.hCursor, &info);
+                GetIconInfo(cursor_info.hCursor, &info);
                 BITMAP bmpCursor = { 0 };
                 GetObject(info.hbmColor, sizeof(bmpCursor), &bmpCursor);
-                DrawIconEx(_memory_handle, _cursor_info.ptScreenPos.x, _cursor_info.ptScreenPos.y, _cursor_info.hCursor, bmpCursor.bmWidth, bmpCursor.bmHeight,
+                DrawIconEx(_memory_handle, cursor_info.ptScreenPos.x, cursor_info.ptScreenPos.y, cursor_info.hCursor, bmpCursor.bmWidth, bmpCursor.bmHeight,
                     0, NULL, DI_NORMAL);
         }
 
