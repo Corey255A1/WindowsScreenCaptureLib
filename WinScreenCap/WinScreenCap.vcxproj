@@ -159,12 +159,16 @@
   <ItemGroup>
     <ClInclude Include="Base64Converter.h" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="ImageComparator.h" />
+    <ClInclude Include="ImageCompressor.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="WinScreenCap.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Base64Converter.cpp" />
     <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="ImageComparator.cpp" />
+    <ClCompile Include="ImageCompressor.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

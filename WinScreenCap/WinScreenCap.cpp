@@ -35,7 +35,7 @@ namespace WinScreenCap {
         return displays;
     }
 
-    ImageData::ImageData(const char* buffer, const size_t data_size) :image(buffer), image_size(data_size) {}
+    ImageData::ImageData(const size_t data_size) :image(std::make_unique<BYTE[]>(data_size)), image_size(data_size) {}
 
 
     WinScreenCap::WinScreenCap(int left, int top, int width, int height) :
@@ -44,8 +44,8 @@ namespace WinScreenCap {
         _width(width),
         _height(height),
         _right(left + width),
-        _bottom(top + height),
-        _jpeg_image_size(0)
+        _bottom(top + height)
+        //,_jpeg_image_size(0)
     {
         // Retrieve the handle to a display device context for the client 
       // area of the window. 
@@ -79,12 +79,12 @@ namespace WinScreenCap {
         _bitmap_info.biClrUsed = 0;
         _bitmap_info.biClrImportant = 0;
 
-        _bitmap_buffer_size = ((_width * _bitmap_info.biBitCount + 31) / 32) * 4 * _height;
-        _bitmap_buffer = new char[_bitmap_buffer_size]();
+        //_bitmap_buffer_size = ((_width * _bitmap_info.biBitCount + 31) / 32) * 4 * _height;
+        //_bitmap_buffer = new char[_bitmap_buffer_size]();
 
-        //initial buffer size.. turbojpeg will resize if necessary
-        _jpeg_buffer_size = (_width * _height) / 2;
-        _jpeg_buffer = tjAlloc(_jpeg_buffer_size);
+        ////initial buffer size.. turbojpeg will resize if necessary
+        //_jpeg_buffer_size = (_width * _height) / 2;
+        //_jpeg_buffer = tjAlloc(_jpeg_buffer_size);
 
         // Select the compatible bitmap into the compatible memory DC.
         SelectObject(_memory_handle, _screen_bitmap_handle);
@@ -94,15 +94,20 @@ namespace WinScreenCap {
         DeleteObject(_memory_handle);
         ReleaseDC(NULL, _window_handle);
         DeleteObject(_screen_bitmap_handle);
-        tjFree(_jpeg_buffer);
-        delete _bitmap_buffer;
+        /*
+        delete _bitmap_buffer;*/
         _memory_handle = NULL;
         _window_handle = NULL;
         _screen_bitmap_handle = NULL;
-        _jpeg_buffer = nullptr;
-        _bitmap_buffer = nullptr;
+        /*_jpeg_buffer = nullptr;
+        _bitmap_buffer = nullptr;*/
     }
-    void WinScreenCap::Capture() {
+
+    ImageData WinScreenCap::MakeBuffer() {
+        return ImageData(((_width * _bitmap_info.biBitCount + 31) / 32) * 4 * _height);
+    }
+
+    void WinScreenCap::Capture(BYTE* image_buffer) {
         // Bit block transfer into our compatible memory DC.
         if (!BitBlt(_memory_handle,
             0, 0,
@@ -136,22 +141,8 @@ namespace WinScreenCap {
         // that's pointed to by lpbitmap.
         GetDIBits(_window_handle, _screen_bitmap_handle, 0,
             _bitmap.bmHeight,
-            _bitmap_buffer,
+            image_buffer,
             (BITMAPINFO*)&_bitmap_info, DIB_RGB_COLORS);
-    }
-
-    void WinScreenCap::Compress() {
-        tjhandle _jpegCompressor = tjInitCompress();
-        _jpeg_image_size = _jpeg_buffer_size;
-        tjCompress2(_jpegCompressor, reinterpret_cast<unsigned char*>(_bitmap_buffer), _width, 0, _height, TJPF_BGRX,
-            &_jpeg_buffer, &_jpeg_image_size, TJSAMP_444, JPEG_QUALITY,
-            TJFLAG_FASTDCT);
-
-        if (_jpeg_image_size > _jpeg_buffer_size) {
-            _jpeg_buffer_size = _jpeg_image_size;
-        }
-
-        tjDestroy(_jpegCompressor);
     }
 
     bool WinScreenCap::PointOnScreen(int x, int y) const {

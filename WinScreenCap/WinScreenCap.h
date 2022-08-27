@@ -17,9 +17,9 @@ namespace WinScreenCap {
     };
     class ImageData {
     public:
-        const char* image;
+        std::unique_ptr<BYTE[]> image;
         const size_t image_size;
-        ImageData(const char* input_buffer, const size_t input_size);
+        ImageData(const size_t input_size);
     };
     class WINSCREENCAP_EXPORTS WinScreenCap
     {
@@ -28,13 +28,13 @@ namespace WinScreenCap {
         ~WinScreenCap();
         
         static std::vector<std::unique_ptr<DisplayInfo>> GetDisplayInfo();
-        
-        void Capture();
-        void Compress();
+        ImageData MakeBuffer();
+        void Capture(BYTE* image_buffer);
+        /*void Compress();
         const char* JpegBuffer() { return reinterpret_cast<const char*>(_jpeg_buffer); }
         size_t JpegSize() { return _jpeg_image_size; }
         const char* BitmapBuffer() { return _bitmap_buffer; }
-        size_t BitmapSize() { return _bitmap_buffer_size; }
+        size_t BitmapSize() { return _bitmap_buffer_size; }*/
         int Top() const { return _top; }
         int Left() const { return _left; }
         int Right() const { return _right;  }
@@ -51,11 +51,11 @@ namespace WinScreenCap {
         int _bottom;
         int _width;
         int _height;
-        char* _bitmap_buffer;
+        /*unsigned char* _bitmap_buffer;
         unsigned long _bitmap_buffer_size;
         unsigned char* _jpeg_buffer;
         unsigned long _jpeg_buffer_size;
-        unsigned long _jpeg_image_size;
+        unsigned long _jpeg_image_size;*/
         HDC _window_handle;
         HDC _memory_handle;
         BITMAPINFOHEADER _bitmap_info;

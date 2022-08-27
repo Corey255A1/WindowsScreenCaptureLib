@@ -27,6 +27,12 @@
     <ClInclude Include="Base64Converter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ImageComparator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ImageCompressor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -39,6 +45,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Base64Converter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ImageComparator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ImageCompressor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

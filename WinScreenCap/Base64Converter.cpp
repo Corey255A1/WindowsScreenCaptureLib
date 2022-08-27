@@ -4,13 +4,13 @@
 namespace Utils{
 	Base64Converter::Base64Converter(size_t buffer_size):
 	_buffer_size(buffer_size),
-	_buffer(new char[buffer_size]),
 	_string_length(0)
-	{}
-	Base64Converter::~Base64Converter() {
-		delete[] _buffer;
+	{
+		_buffer = std::make_unique<BYTE[]>(buffer_size);
 	}
-	const char* Base64Converter::Convert(const char* raw_data, size_t data_size) {
+	Base64Converter::~Base64Converter() {
+	}
+	const BYTE* Base64Converter::Convert(const BYTE* raw_data, size_t data_size) {
 		_string_length = 0;
 		size_t rIndex = 3;
 		for (; rIndex <= data_size; rIndex += 3) {
@@ -37,6 +37,6 @@ namespace Utils{
 		}
 		
 		_buffer[_string_length] = '\0';
-		return _buffer;
+		return _buffer.get();
 	}
 }
