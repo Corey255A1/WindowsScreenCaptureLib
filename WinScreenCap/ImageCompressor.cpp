@@ -17,17 +17,21 @@ namespace WinScreenCap {
     }
 
     void ImageCompressor::Compress(int width, int height, std::unique_ptr<BYTE[]>& raw_image_buffer, std::unique_ptr<BYTE[]>& compressed_image_buffer, unsigned long& compressed_image_size) {
+        Compress(width, height, raw_image_buffer.get(), compressed_image_buffer.get(), compressed_image_size);
+    }
+
+    void ImageCompressor::Compress(int width, int height, BYTE* raw_image_buffer, BYTE* compressed_image_buffer, unsigned long& compressed_image_size) {
         tjhandle _jpegCompressor = tjInitCompress();
-        compressed_image_size = _jpeg_buffer_size;\
-        tjCompress2(_jpegCompressor, raw_image_buffer.get(), width, 0, height, TJPF_BGRX,
-            &_jpeg_buffer, &compressed_image_size, TJSAMP_444, JPEG_QUALITY,
-            TJFLAG_FASTDCT);
+        compressed_image_size = _jpeg_buffer_size; \
+            tjCompress2(_jpegCompressor, raw_image_buffer, width, 0, height, TJPF_BGRX,
+                &_jpeg_buffer, &compressed_image_size, TJSAMP_444, JPEG_QUALITY,
+                TJFLAG_FASTDCT);
 
         if (compressed_image_size > _jpeg_buffer_size) {
             _jpeg_buffer_size = compressed_image_size;
         }
 
         tjDestroy(_jpegCompressor);
-        memcpy(compressed_image_buffer.get(), _jpeg_buffer, compressed_image_size);
+        memcpy(compressed_image_buffer, _jpeg_buffer, compressed_image_size);
     }
 }

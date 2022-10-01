@@ -31,6 +31,10 @@ int main()
 
     std::cout << GetTickCount64() << std::endl;
 
+    Utils::Base64Converter conv(1920);
+
+
+
     
 
     //std::vector<std::unique_ptr<BYTE[]>> regions;
@@ -38,9 +42,14 @@ int main()
     //for (int r = 0; r < region_width_count * region_height_count; r++) {
     //    regions.push_back(std::make_unique<BYTE[]>(crop_height * crop_byte_width));
     //}
-
-    //Takes about 50ms
     cap->Capture(compraror.CurrentBuffer());
+
+    //Takes about 
+    auto* image = compraror.CompressedBuffer();
+    std::cout << conv.Convert(image, compraror.CompressedBufferSize());
+    return 0; 
+    cap->Capture(compraror.CurrentBuffer());
+    
     compraror.Swap();
     //Sleep(1000);
     std::cout << GetTickCount64() << std::endl;

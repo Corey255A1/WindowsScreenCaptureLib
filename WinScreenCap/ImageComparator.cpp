@@ -22,7 +22,7 @@ namespace WinScreenCap {
 		_buffer1 = std::make_unique<BYTE[]>(_buffer_size);
 		_buffer2 = std::make_unique<BYTE[]>(_buffer_size);
 		_working_buffer = std::make_unique<BYTE[]>(_region_width * _region_byte_width);
-
+		_compressed = std::make_unique<BYTE[]>(_buffer_size);
 		for (int r = 0; r < x_region_count * y_region_count; r++) {
 			_regions.push_back(std::make_unique<ImageRegion>(_region_width * _region_byte_width));
 		}
@@ -43,6 +43,7 @@ namespace WinScreenCap {
 				x_offset = rx * _region_byte_width;
 
 				region_difference = false;
+				//copy all bytes
 				for (int y = 0; y < _region_height; y++) {
 					for (int x = 0; x < _region_byte_width; x++) {
 						int yidx = (y + y_offset);
@@ -58,6 +59,9 @@ namespace WinScreenCap {
 					_regions[differences]->ImageSize = image_size;
 					_regions[differences]->X = rx*_region_width;
 					_regions[differences]->Y = y_offset;
+					_regions[differences]->Width = _region_width;
+					_regions[differences]->Height = _region_height;
+
 					differences++;
 				}
 				
@@ -77,6 +81,11 @@ namespace WinScreenCap {
 
 	BYTE* ImageComparator::OtherBuffer() {
 		return _buffer_swapped ? _buffer1.get() : _buffer2.get();
+	}
+
+	BYTE* ImageComparator::CompressedBuffer() {
+		_compressor.Compress(_width, _height, CurrentBuffer(), _compressed.get(), _compressed_buffer_size);
+		return _compressed.get();
 	}
 
 }

@@ -129,7 +129,7 @@ namespace WinScreenCap {
                 GetIconInfo(cursor_info.hCursor, &info);
                 BITMAP bmpCursor = { 0 };
                 GetObject(info.hbmColor, sizeof(bmpCursor), &bmpCursor);
-                DrawIconEx(_memory_handle, cursor_info.ptScreenPos.x, cursor_info.ptScreenPos.y, cursor_info.hCursor, bmpCursor.bmWidth, bmpCursor.bmHeight,
+                DrawIconEx(_memory_handle, cursor_info.ptScreenPos.x - _left, cursor_info.ptScreenPos.y - _top, cursor_info.hCursor, bmpCursor.bmWidth, bmpCursor.bmHeight,
                     0, NULL, DI_NORMAL);
         }
 

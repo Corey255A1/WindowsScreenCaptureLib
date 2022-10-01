@@ -12,6 +12,8 @@ namespace WinScreenCap {
 	public:
 		int X;
 		int Y;
+		int Width;
+		int Height;
 		unsigned long ImageSize;
 		int BufferSize;
 		std::unique_ptr<BYTE[]> Buffer;
@@ -29,10 +31,12 @@ namespace WinScreenCap {
 		int _region_byte_width;
 		int _region_height;
 		std::unique_ptr<BYTE[]> _buffer1;
+		std::unique_ptr<BYTE[]> _compressed;
 		std::unique_ptr<BYTE[]> _buffer2;
 		std::unique_ptr<BYTE[]> _working_buffer;
 		bool _buffer_swapped;
 		int _buffer_size;
+		unsigned long _compressed_buffer_size;
 		std::vector<std::unique_ptr<ImageRegion>> _regions;
 		ImageCompressor _compressor;
 
@@ -40,7 +44,10 @@ namespace WinScreenCap {
 		ImageComparator(int width, int height, int x_region_count, int y_region_count);
 		int GenerateDifferenceRegions();
 		BYTE* CurrentBuffer();
+		BYTE* CompressedBuffer();
 		BYTE* OtherBuffer();
+		int BufferSize() const { return _buffer_size; }
+		int CompressedBufferSize() const { return static_cast<int>(_compressed_buffer_size); }
 		void Swap() { _buffer_swapped = !_buffer_swapped; }
 		ImageRegion* Region(int index);
 	};

@@ -16,6 +16,7 @@ namespace WinScreenCap {
 		ImageCompressor(int initial_size);
 		~ImageCompressor();
 		void Compress(int width, int height, std::unique_ptr<BYTE[]>& raw_image_buffer, std::unique_ptr<BYTE[]>& compressed_image_buffer, unsigned long& compress_image_size);
+		void Compress(int width, int height, BYTE* raw_image_buffer, BYTE* compressed_image_buffer, unsigned long& compressed_image_size);
 	};
 }
 
